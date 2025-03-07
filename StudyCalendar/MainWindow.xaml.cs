@@ -18,11 +18,34 @@ public partial class MainWindow : Window
 {
     private int currentYear;
     private int currentMonth;
+    private CalendarData _calendarData;
+
+	private void SaveData()
+	{
+		_calendarData.SaveData("calendarData.json");
+	}
+
+	private void DayButton_Click(object sender, RoutedEventArgs e)
+	{
+		Button clickedButton = (Button)sender;
+		int day = (int)clickedButton.Tag;
+
+		// Добавляем день в базу данных занятий
+		_calendarData.MarkDayAsStudied(currentYear, currentMonth, day);
+
+		// Перерисовываем календарь, чтобы обновить кнопку
+		UpdateCalendar();
+	}
 
 
     public MainWindow()
     {
         InitializeComponent();
+		_calendarData = new CalendarData();
+		_calendarData.LoadData("calendarData.json"); // Загружаем данные
+
+		// Устанавливаем текущий год и месяц на сегодня
+		currentYear = DateTime.Now.Year;
         currentMonth = DateTime.Now.Month;
         currentYear = DateTime.Now.Year;
 		UpdateCalendar();
@@ -57,6 +80,7 @@ public partial class MainWindow : Window
                 Content = day.ToString(),
                 Width = 50,
                 Height = 50,
+                Background = Brushes.AliceBlue,
                 Margin = new Thickness(5)
             };
 
