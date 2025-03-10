@@ -5,20 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StudyCalendar"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="600">
+        Title="MainWindow" Height="500" Width="650">
     <Grid>
         <StackPanel Orientation="Vertical" Margin="10">
             <!-- Верхняя панель с заголовком и кнопками -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
-                <Button Name="PrevMonthButton" Content="←" Width="30" />
-                <TextBlock Name="MonthLabel" FontSize="16" FontWeight="Bold" Text="Март 2025" Margin="10,0" />
+                <Button Name="PrevMonthButton" Content="←" Width="30"  />
+                <TextBlock Name="MonthLabel" FontSize="16" FontWeight="Normal" Margin="10,0" />
                 <Button Name="NextMonthButton" Content="→" Width="30" />
             </StackPanel>
 
-            <Grid Name="CalendarGrid"> 
+            <Grid Name="CalendarGrid" > 
                 <!-- отображаем дни -->
                 
-
+                
             </Grid>
         </StackPanel>
     </Grid>
