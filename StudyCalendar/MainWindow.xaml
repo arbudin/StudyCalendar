@@ -5,20 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StudyCalendar"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="650">
+        Title="Календарь" Height="500" Width="650"
+        Icon="/Images/icon2.ico">
+        
+    <!--<Window.Background>
+        <ImageBrush ImageSource="images/backgroundу.jpg">
+        </ImageBrush>
+        
+    </Window.Background>-->
+
     <Grid>
         <StackPanel Orientation="Vertical" Margin="10">
             <!-- Верхняя панель с заголовком и кнопками -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
-                <Button Name="PrevMonthButton" Content="←" Width="30"  />
-                <TextBlock Name="MonthLabel" FontSize="16" FontWeight="Normal" Margin="10,0" />
-                <Button Name="NextMonthButton" Content="→" Width="30" />
+                <Button Name="PrevMonthButton" Content="←" Width="30" Click="PrevMonthButton_Click"/>
+                <TextBlock Name="MonthLabel" FontSize="16" FontWeight="Normal" Margin="10,0" Background="White" />
+                <Button Name="NextMonthButton" Content="→" Width="30" Click="NextMonthButton_Click"/>
             </StackPanel>
 
-            <Grid Name="CalendarGrid" > 
+            
+            <Grid x:Name="CalendarGrid" > 
                 <!-- отображаем дни -->
-                
-                
+                <Grid.RenderTransform>
+                    <TranslateTransform x:Name="CalendarTransform"/>
+                </Grid.RenderTransform>
+
             </Grid>
         </StackPanel>
     </Grid>

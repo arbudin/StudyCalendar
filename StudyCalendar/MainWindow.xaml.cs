@@ -4,6 +4,7 @@ using System.Windows.Input;
 using StudyCalendar.Models;
 using System.Linq;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace StudyCalendar;
 
@@ -35,26 +36,69 @@ public partial class MainWindow : Window
 
     private void PrevMonthButton_Click(object sender, RoutedEventArgs e)
     {
-        if (currentMonth == 1)
-        {
-            currentMonth = 12;
-            currentYear--;
-        }
-        else currentMonth--;
-
-        UpdateCalendar();
-    }
+		AnimateMonthTransition(false);
+	}
 
 	private void NextMonthButton_Click(object sender, RoutedEventArgs e)
 	{
-        if (currentMonth == 1)
-        {
-            currentMonth = 12;
-            currentYear++;
-        }
-        else currentMonth++;
+		AnimateMonthTransition(true);
+	}
 
-		UpdateCalendar();
+	// АНИМАЦИЯ
+	private void AnimateMonthTransition(bool isNext)
+	{
+		double fromX = isNext ? 0 : 0; // Начальная позиция
+		double toX = isNext ? -700 : 700; // Сдвиг влево (следующий) или вправо (предыдущий)
+
+		// Создаём анимацию
+		var slideAnimation = new DoubleAnimation
+		{
+			From = fromX,
+			To = toX,
+			Duration = TimeSpan.FromSeconds(0.4), // Длительность анимации
+			EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut } // Смягчение движения
+		};
+
+		// Запуск анимации
+		slideAnimation.Completed += (s, e) =>
+		{
+			// Меняем месяц ПОСЛЕ завершения анимации
+			if (isNext)
+			{
+				if (currentMonth == 12)
+				{
+					currentMonth = 1;
+					currentYear++;
+				}
+				else currentMonth++;
+			}
+			else
+			{
+				if (currentMonth == 1)
+				{
+					currentMonth = 12;
+					currentYear--;
+				}
+				else currentMonth--;
+			}
+
+			UpdateCalendar(); // Обновляем календарь
+			CalendarTransform.X = isNext ? 700 : -700; // Ставим новую начальную позицию
+
+			// Анимация появления
+			var slideInAnimation = new DoubleAnimation
+			{
+				From = isNext ? 700 : -700, // Начинает с противоположной стороны
+				To = 0, // Возвращается в центр
+				Duration = TimeSpan.FromSeconds(0.4),
+				EasingFunction = new QuadraticEase { EasingMode = EasingMode.EaseInOut }
+			};
+
+			// Запуск анимации прихода
+			CalendarTransform.BeginAnimation(TranslateTransform.XProperty, slideInAnimation);
+		};
+
+		CalendarTransform.BeginAnimation(TranslateTransform.XProperty, slideAnimation);
 	}
 
 	public MainWindow()
