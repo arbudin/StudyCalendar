@@ -13,7 +13,8 @@ namespace StudyCalendar;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private int currentYear;
+	private bool isAnimating = false;
+	private int currentYear;
     private int currentMonth;
     private CalendarData _calendarData;
 
@@ -47,6 +48,9 @@ public partial class MainWindow : Window
 	// АНИМАЦИЯ
 	private void AnimateMonthTransition(bool isNext)
 	{
+		if (isAnimating) return;
+		isAnimating = true;
+
 		double fromX = isNext ? 0 : 0; // Начальная позиция
 		double toX = isNext ? -700 : 700; // Сдвиг влево (следующий) или вправо (предыдущий)
 
@@ -65,21 +69,21 @@ public partial class MainWindow : Window
 			// Меняем месяц ПОСЛЕ завершения анимации
 			if (isNext)
 			{
-				if (currentMonth == 12)
+				currentMonth++;
+				if (currentMonth > 12)
 				{
 					currentMonth = 1;
 					currentYear++;
 				}
-				else currentMonth++;
 			}
 			else
 			{
-				if (currentMonth == 1)
+				currentMonth--;
+				if (currentMonth < 1)
 				{
 					currentMonth = 12;
 					currentYear--;
 				}
-				else currentMonth--;
 			}
 
 			UpdateCalendar(); // Обновляем календарь
@@ -96,6 +100,8 @@ public partial class MainWindow : Window
 
 			// Запуск анимации прихода
 			CalendarTransform.BeginAnimation(TranslateTransform.XProperty, slideInAnimation);
+
+			isAnimating = false;
 		};
 
 		CalendarTransform.BeginAnimation(TranslateTransform.XProperty, slideAnimation);
@@ -166,7 +172,7 @@ public partial class MainWindow : Window
 
 			Button dayButton = new Button
             {
-				Content = isStudied ? $"{day}" : day.ToString(), // Добавляем галочку, если занимался
+				Content = isStudied ? $"{day}" : day.ToString(), 
 				Style = (Style)Application.Current.TryFindResource("RoundedButtonStyle"),
 				Width = 50,
                 Height = 50,
